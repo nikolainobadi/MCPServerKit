@@ -1,8 +1,17 @@
-.DS_Store
-/.build
-/Packages
-xcuserdata/
+## Build generated
+build/
 DerivedData/
-.swiftpm/configuration/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
-.netrc
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# macOS
+.DS_Store
+
+## CIPipeKit
+CIPipeKit/TestResults
+
+# Directories potentially created on remote AFP share
+config.json

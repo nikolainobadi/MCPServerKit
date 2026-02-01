@@ -5,14 +5,26 @@ import PackageDescription
 
 let package = Package(
     name: "MCPServerKit",
+    platforms: [
+        .macOS(.v15)
+    ],
     products: [
         .library(
             name: "MCPServerKit",
             targets: ["MCPServerKit"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/modelcontextprotocol/swift-sdk.git", from: "0.10.0"),
+        .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.3.0"),
+    ],
     targets: [
         .target(
-            name: "MCPServerKit"),
+            name: "MCPServerKit",
+            dependencies: [
+                .product(name: "MCP", package: "swift-sdk"),
+                .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
+            ]
+        ),
         .testTarget(
             name: "MCPServerKitTests",
             dependencies: ["MCPServerKit"]
