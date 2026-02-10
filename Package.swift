@@ -11,10 +11,12 @@ let package = Package(
     products: [
         .library(
             name: "MCPServerKit",
-            targets: ["MCPServerKit"]),
+            targets: ["MCPServerKit"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/modelcontextprotocol/swift-sdk.git", from: "0.10.0"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0"),
         .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.3.0"),
     ],
     targets: [
@@ -22,12 +24,15 @@ let package = Package(
             name: "MCPServerKit",
             dependencies: [
                 .product(name: "MCP", package: "swift-sdk"),
-                .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
+                .product(name: "Hummingbird", package: "hummingbird"),
+                .product(name: "ServiceLifecycle", package: "swift-service-lifecycle")
             ]
         ),
         .testTarget(
             name: "MCPServerKitTests",
-            dependencies: ["MCPServerKit"]
+            dependencies: [
+                "MCPServerKit",
+            ]
         ),
     ]
 )
