@@ -17,7 +17,7 @@ public struct FeatureModule {
 
 
 // MARK: - Helpers
-extension FeatureModule {
+public extension FeatureModule {
     var tools: [any ToolModule] {
         return capabilities.map(\.tool)
     }

@@ -27,4 +27,26 @@ public protocol ToolHandler: ToolHandlerHelpers {
     /// - Returns: The result of the tool execution.
     /// - Throws: A `ToolErrorConvertible` error if execution fails.
     func handle(_ descriptor: Descriptor, arguments: [String: Value]?) async throws -> CallTool.Result
+
+    /// Handles execution for a resolved tool descriptor with optional auth context.
+    ///
+    /// Override this method instead of `handle(_:arguments:)` when your handler
+    /// needs access to the authenticated user's identity (e.g. for per-user data).
+    ///
+    /// - Parameters:
+    ///   - descriptor: The resolved tool descriptor indicating which tool to execute.
+    ///   - arguments: The raw arguments from the MCP client, if any.
+    ///   - authContext: The authenticated user context, or `nil` for unauthenticated servers.
+    /// - Returns: The result of the tool execution.
+    /// - Throws: A `ToolErrorConvertible` error if execution fails.
+    func handle(_ descriptor: Descriptor, arguments: [String: Value]?, authContext: AuthContext?) async throws -> CallTool.Result
+}
+
+// MARK: - Default Implementation
+public extension ToolHandler {
+    /// Default: delegates to the non-auth version, ignoring `authContext`.
+    /// Existing handlers that don't need auth context remain source-compatible.
+    func handle(_ descriptor: Descriptor, arguments: [String: Value]?, authContext: AuthContext?) async throws -> CallTool.Result {
+        return try await handle(descriptor, arguments: arguments)
+    }
 }

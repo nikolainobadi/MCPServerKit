@@ -11,7 +11,7 @@ import MCP
 ///
 /// Registers a single `ListPrompts` handler and a single `GetPrompt` handler,
 /// routing requests to the appropriate module based on prompt name.
-enum PromptRegistrar {
+public enum PromptRegistrar {
     /// Registers all prompt modules on the server.
     ///
     /// - Parameters:
@@ -19,7 +19,7 @@ enum PromptRegistrar {
     ///   - server: The MCP server to register handlers on.
     ///
     /// - Precondition: All prompt names across modules must be unique.
-    static func register(modules: [any PromptModule], on server: Server) async {
+    public static func register(modules: [any PromptModule], on server: Server) async {
         let allPrompts = aggregatePrompts(from: modules)
         let router = buildRouter(from: modules)
 

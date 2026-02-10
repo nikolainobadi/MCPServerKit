@@ -18,7 +18,7 @@ import MCP
 /// `ToolModuleAdapter` handles infrastructure.
 struct ToolModuleAdapter<Handler: ToolHandler> {
     private let handler: Handler
-    
+
     init(handler: Handler) {
         self.handler = handler
     }
@@ -27,11 +27,11 @@ struct ToolModuleAdapter<Handler: ToolHandler> {
 // MARK: - ToolModule
 extension ToolModuleAdapter: ToolModule {
     typealias ToolDescriptor = Handler.Descriptor
-    
-    func handle(_ params: CallTool.Parameters) async throws -> CallTool.Result {
+
+    func handle(_ params: CallTool.Parameters, authContext: AuthContext?) async throws -> CallTool.Result {
         let descriptor = resolveDescriptor(from: params)
-        
-        return try await handler.handle(descriptor, arguments: params.arguments)
+
+        return try await handler.handle(descriptor, arguments: params.arguments, authContext: authContext)
     }
 }
 
@@ -48,7 +48,7 @@ private extension ToolModuleAdapter {
         guard let descriptor = Handler.Descriptor(name: params.name) else {
             fatalError("ToolRegistrar routed unknown tool '\(params.name)' to \(Self.self)")
         }
-        
+
         return descriptor
     }
 }

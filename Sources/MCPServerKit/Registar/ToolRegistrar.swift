@@ -12,15 +12,17 @@ import Foundation
 ///
 /// Registers a single `ListTools` handler and a single `CallTool` handler,
 /// routing calls to the appropriate module based on tool name.
-enum ToolRegistrar {
+public enum ToolRegistrar {
     /// Registers all tool modules on the server.
     ///
     /// - Parameters:
     ///   - modules: The tool modules to register.
     ///   - server: The MCP server to register handlers on.
+    ///   - authContextHolder: Optional holder providing per-request auth context.
+    ///     When provided, the current auth context is read and forwarded to tool handlers.
     ///
     /// - Precondition: All tool names across modules must be unique.
-    static func register(modules: [any ToolModule], on server: Server) async {
+    public static func register(modules: [any ToolModule], on server: Server, authContextHolder: AuthContextHolder? = nil) async {
         let allTools = aggregateTools(from: modules)
         let router = buildRouter(from: modules)
 
@@ -33,8 +35,10 @@ enum ToolRegistrar {
                 return unknownToolError(toolName: params.name)
             }
 
+            let authContext = authContextHolder?.current
+
             do {
-                return try await module.handle(params)
+                return try await module.handle(params, authContext: authContext)
             } catch let error as ToolErrorConvertible {
                 return errorResult(from: error, toolName: params.name)
             } catch {

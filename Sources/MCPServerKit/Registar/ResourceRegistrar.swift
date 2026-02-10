@@ -11,7 +11,7 @@ import MCP
 ///
 /// Registers a single `ListResources` handler and a single `ReadResource` handler,
 /// routing reads to the appropriate module based on resource URI.
-enum ResourceRegistrar {
+public enum ResourceRegistrar {
     /// Registers all resource modules on the server.
     ///
     /// - Parameters:
@@ -19,7 +19,7 @@ enum ResourceRegistrar {
     ///   - server: The MCP server to register handlers on.
     ///
     /// - Precondition: All resource URIs across modules must be unique.
-    static func register(modules: [any ResourceModule], on server: Server) async {
+    public static func register(modules: [any ResourceModule], on server: Server) async {
         let allResources = aggregateResources(from: modules)
         let router = buildRouter(from: modules)
 

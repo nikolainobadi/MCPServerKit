@@ -8,11 +8,16 @@
 import MCP
 import ServiceLifecycle
 
-struct MCPLifecycleService: Service {
-    let server: Server
-    let transport: any Transport
+public struct MCPLifecycleService: Service {
+    public let server: Server
+    public let transport: any Transport
 
-    func run() async throws {
+    public init(server: Server, transport: any Transport) {
+        self.server = server
+        self.transport = transport
+    }
+
+    public func run() async throws {
         try await server.start(transport: transport)
         try await server.notify(ToolListChangedNotification.message())
         try await server.notify(ResourceListChangedNotification.message())
@@ -20,7 +25,7 @@ struct MCPLifecycleService: Service {
         await server.waitUntilCompleted()
     }
 
-    func shutdown() async throws {
+    public func shutdown() async throws {
         await server.stop()
     }
 }
