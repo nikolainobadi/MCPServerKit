@@ -13,15 +13,17 @@ struct MCPLifecycleService: Service {
     let transport: any Transport
 
     func run() async throws {
-        try await server.start(transport: transport)
-        try await server.notify(ToolListChangedNotification.message())
-        try await server.notify(ResourceListChangedNotification.message())
-        try await server.notify(PromptListChangedNotification.message())
-        
-        await server.waitUntilCompleted()
-    }
+        try await withGracefulShutdownHandler {
+            try await server.start(transport: transport)
+            try await server.notify(ToolListChangedNotification.message())
+            try await server.notify(ResourceListChangedNotification.message())
+            try await server.notify(PromptListChangedNotification.message())
 
-    func shutdown() async throws {
-        await server.stop()
+            await server.waitUntilCompleted()
+        } onGracefulShutdown: {
+            Task {
+                await server.stop()
+            }
+        }
     }
 }
