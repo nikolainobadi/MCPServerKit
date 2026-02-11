@@ -17,6 +17,7 @@ public final class LocalMCPServer {
     private let features: [FeatureModule]
 
     public init(name: String, version: String, instructions: String? = nil, strictConfig: Bool = false, features: [FeatureModule]) {
+        self.features = features
         self.server = .init(
             name: name,
             version: version,
@@ -30,7 +31,6 @@ public final class LocalMCPServer {
             ),
             configuration: strictConfig ? .strict : .default
         )
-        self.features = features
     }
 }
 
@@ -57,6 +57,7 @@ public extension LocalMCPServer {
             successTerminationBehavior: .gracefullyShutdownGroup,
             failureTerminationBehavior: .gracefullyShutdownGroup
         )
+        
         let groupConfig = ServiceGroupConfiguration(services: [serviceConfig], gracefulShutdownSignals: [.sigint, .sigterm], cancellationSignals: [], logger: logger)
         let group = ServiceGroup(configuration: groupConfig)
 
