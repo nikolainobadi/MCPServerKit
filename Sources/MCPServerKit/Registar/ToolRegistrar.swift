@@ -57,7 +57,7 @@ extension ToolRegistrar {
         )
         let text = (try? String(decoding: encoder.encode(payload), as: UTF8.self))
             ?? "{\"code\":\"tool.unknown\",\"message\":\"Unknown tool\"}"
-        return .init(content: [.text(text)], isError: true)
+        return .init(content: [.text(text: text, annotations: nil, _meta: nil)], isError: true)
     }
 
     static func errorResult(from error: ToolErrorConvertible, toolName: String) -> CallTool.Result {
@@ -66,7 +66,7 @@ extension ToolRegistrar {
         let payload = error.toErrorPayload(toolName: toolName)
         let text = (try? String(decoding: encoder.encode(payload), as: UTF8.self))
             ?? "{\"code\":\"internal.serialization\",\"message\":\"Failed to encode error payload\"}"
-        return .init(content: [.text(text)], isError: true)
+        return .init(content: [.text(text: text, annotations: nil, _meta: nil)], isError: true)
     }
 }
 

@@ -36,7 +36,6 @@ public final class LocalMCPServer {
                 logging: .init(),
                 prompts: .init(listChanged: true),
                 resources: .init(listChanged: true),
-                sampling: .init(),
                 tools: .init(listChanged: true)
             ),
             configuration: strictConfig ? .strict : .default

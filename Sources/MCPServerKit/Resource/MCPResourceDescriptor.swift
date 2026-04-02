@@ -36,7 +36,7 @@ public extension MCPResourceDescriptor {
     }
     
     var toolResultContent: Tool.Content {
-        return .resource(uri: uri, mimeType: mimeType, text: nil)
+        return .resource(resource: .text("", uri: uri, mimeType: mimeType))
     }
 
     /// Initializes a descriptor by looking up a resource URI among all cases.

@@ -27,7 +27,7 @@ public protocol PromptModule: Sendable {
     ///   - prompt: The resolved prompt descriptor.
     ///   - arguments: Optional arguments passed to the prompt.
     /// - Returns: The prompt result containing description and messages.
-    func prompt(_ prompt: PromptType, arguments: [String: Value]?) -> GetPrompt.Result
+    func prompt(_ prompt: PromptType, arguments: [String: String]?) -> GetPrompt.Result
 
     /// Returns the prompt result for a given prompt name and arguments.
     ///
@@ -38,7 +38,7 @@ public protocol PromptModule: Sendable {
     ///   - name: The name of the prompt.
     ///   - arguments: Optional arguments passed to the prompt.
     /// - Returns: The prompt result containing description and messages.
-    func getPrompt(name: String, arguments: [String: Value]?) -> GetPrompt.Result
+    func getPrompt(name: String, arguments: [String: String]?) -> GetPrompt.Result
 }
 
 // MARK: - Default Implementations
@@ -64,7 +64,7 @@ public extension PromptModule {
     }
 
     /// Default implementation that resolves the name and delegates to `prompt(_:arguments:)`.
-    func getPrompt(name: String, arguments: [String: Value]?) -> GetPrompt.Result {
+    func getPrompt(name: String, arguments: [String: String]?) -> GetPrompt.Result {
         let prompt = resolvePrompt(from: name)
         
         return self.prompt(prompt, arguments: arguments)
