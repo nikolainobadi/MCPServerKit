@@ -40,7 +40,7 @@ LocalMCPServer                  // wiring + stdio transport + ServiceLifecycle s
 The API reference skill for this package lives here, in `Skills/MCPServerKit/`, and is served by the public `nn-swift-skills` marketplace as `MCPServerKit@nn-swift-skills`. It was moved out of `NobadiScripts` so the API and its documentation change together: **any PR that changes the public API must update `Skills/MCPServerKit/` in the same PR.**
 
 - `Skills/` is not a SwiftPM target; it ships only through the marketplace.
-- `Skills/MCPServerKit/.claude-plugin/plugin.json` deliberately has **no `version` field**. The marketplace pins the skill to a git tag, and the plugin cache is keyed by commit sha. Do not reintroduce a version; a hand-typed number nothing verifies is the staleness this arrangement removes.
+- `Skills/MCPServerKit/.claude-plugin/plugin.json` carries a `version` that the release tooling sets to the release tag. Claude Code keys its plugin cache on that version, so it must match the tag the marketplace `ref` points at; a release that moves the tag without the version can keep serving the previous cached docs.
 - Code in `Examples.md` and the `*ToolPattern.md` templates is what consumers copy. When the API or the swift-sdk dependency changes, re-check that those snippets still compile.
 
 ## Releasing
