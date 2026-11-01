@@ -1,10 +1,3 @@
-//
-//  ResourceModule.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 import MCP
 
 /// A protocol representing a logical group of MCP resources.

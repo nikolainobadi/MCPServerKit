@@ -1,10 +1,3 @@
-//
-//  ToolError.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/28/26.
-//
-
 /// A protocol that defines the error namespace for a feature.
 ///
 /// Each feature declares a single domain string that prefixes all error codes

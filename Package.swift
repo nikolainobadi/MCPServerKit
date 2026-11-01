@@ -14,7 +14,7 @@ let package = Package(
             targets: ["MCPServerKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/modelcontextprotocol/swift-sdk.git", from: "0.10.0"),
+        .package(url: "https://github.com/modelcontextprotocol/swift-sdk.git", from: "0.12.0"),
         .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.3.0"),
     ],
     targets: [

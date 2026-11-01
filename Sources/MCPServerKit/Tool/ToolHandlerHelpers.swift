@@ -1,10 +1,3 @@
-//
-//  ToolHandlerHelpers.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/28/26.
-//
-
 import MCP
 import Foundation
 

@@ -1,10 +1,3 @@
-//
-//  ResourceRegistrar.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 import MCP
 
 /// Central registrar responsible for MCP resource wiring.

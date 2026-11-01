@@ -1,10 +1,3 @@
-//
-//  FeatureCapability.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 /// Groups related tools, resources, and prompts for a single workflow.
 /// Capabilities are composition-time constructs that enable safe deletion of related MCP artifacts.
 public struct FeatureCapability {

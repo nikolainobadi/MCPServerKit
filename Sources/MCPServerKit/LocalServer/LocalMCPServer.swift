@@ -1,10 +1,3 @@
-//
-//  LocalMCPServer.swift
-//  Felix
-//
-//  Created by Nikolai Nobadi on 1/26/26.
-//
-
 import MCP
 import Logging
 import ServiceLifecycle

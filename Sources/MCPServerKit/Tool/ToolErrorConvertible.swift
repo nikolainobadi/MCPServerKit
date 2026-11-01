@@ -1,10 +1,3 @@
-//
-//  ToolErrorConvertible.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 /// A protocol for errors that can convert themselves into structured MCP error payloads.
 ///
 /// Any error that escapes a tool boundary must conform to this protocol.
