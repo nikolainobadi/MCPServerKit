@@ -29,7 +29,7 @@ extension {Name}ToolDescriptor: MCPToolDescriptor {
     var inputSchema: Value {
         switch self {
         case .{toolCase}:
-            return .object([:])
+            return Schema.object([:])
         }
     }
 
@@ -144,6 +144,8 @@ protocol {Name}Provider: Sendable {
     func provide{Name}() throws -> String
 }
 ```
+
+Errors thrown by the provider must conform to `ToolErrorConvertible`, or the handler must translate them before they escape. Registering the resource module makes its content available at the descriptor URI; the text result above does not automatically include a resource reference.
 
 ## Wiring
 

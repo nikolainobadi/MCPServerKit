@@ -52,9 +52,10 @@ All descriptor enums must be `CaseIterable` and `Sendable`.
 ## Key Conventions
 
 - One descriptor enum per handler (don't share descriptors across handlers)
-- Use `Schema.object()` with `RequiredSchema` for tool inputSchema
+- Use `Schema.object()` with `Schema.RequiredSchema` for tool inputSchema; use `Schema.object([:])` when there are no arguments
 - Use `ToolHandlerHelpers` methods for argument extraction (requireString, optionalString, etc.)
-- Errors escaping tool boundaries must conform to `ToolErrorConvertible`
+- Keep tool names, resource URIs, and prompt names unique across all features; duplicates fail registration
+- Errors escaping tool boundaries must conform to `ToolErrorConvertible`; translate dependency errors before they escape to avoid `fatalError`
 - `ToolError` protocol provides declarative, domain-prefixed error codes
 
 ## Context Files

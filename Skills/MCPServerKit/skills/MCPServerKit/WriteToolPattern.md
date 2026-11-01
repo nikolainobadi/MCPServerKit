@@ -84,8 +84,17 @@ import MCPServerKit
 
 struct {ArgumentsType}: Decodable, SchemaDerivable {
     // Declare stored properties matching the tool's declared arguments
+
+    static func schema() -> Value {
+        // Replace the empty dictionary with .required(...) / .optional(...) fields matching those properties
+        Schema.object([:])
+    }
 }
 ```
+
+Implement `schema()` explicitly; `SchemaDerivable` does not synthesize it. Replace the property and schema comments with the declared arguments. `{ReturnType}` must conform to `Encodable` for `encodePayload`.
+
+Errors thrown by the writer must conform to `ToolErrorConvertible`, or the handler must translate them before they escape.
 
 ## Wiring
 

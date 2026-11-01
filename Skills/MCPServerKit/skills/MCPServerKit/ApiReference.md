@@ -65,7 +65,9 @@ func decodeArguments<T: Decodable>(_ type: T.Type, from arguments: [String: Valu
 func encodePayload<T: Encodable>(_ payload: T, formatting: PayloadFormatting = .compact) -> String
 ```
 
-`PayloadFormatting`: `.compact` or `.prettyPrinted`
+`PayloadFormatting`: `.compact` or `.prettyPrinted`. Both sort JSON keys. Encoding failure returns `{"message":"Failed to encode payload"}` rather than throwing or setting a tool result's `isError` flag.
+
+`decodeArguments` treats `nil` as an empty object and wraps decoding failures in `ToolArgumentError.decodingError`. It uses `Decodable`; it does not validate against `inputSchema`. Enforce constraints such as numeric bounds in your argument type or domain layer.
 
 ## Content Constructors (swift-sdk 0.12)
 
@@ -104,7 +106,7 @@ public indirect enum Field {
 }
 ```
 
-### RequiredSchema
+### Schema.RequiredSchema
 
 ```swift
 public enum RequiredSchema {
@@ -125,7 +127,9 @@ public protocol SchemaObjectDerivable {
 }
 ```
 
-Conform to `SchemaDerivable` on argument structs to generate `inputSchema` from a type rather than inline.
+Conform to `SchemaDerivable` on argument structs and implement `static func schema() -> Value` explicitly; conformance does not synthesize a schema from stored properties. Use the result as `inputSchema`. `SchemaObjectDerivable` likewise requires an explicit `objectSchema()` implementation.
+
+For a tool with no arguments, use `Schema.object([:])` to include `type: "object"` and an empty `properties` map. `Schema.RequiredSchema` is nested under `Schema`; `.required` and `.optional` can be inferred in the dictionary passed to `Schema.object`.
 
 ## MCPResourceDescriptor
 
@@ -140,7 +144,7 @@ public protocol MCPResourceDescriptor: CaseIterable, Sendable {
 }
 ```
 
-Default implementations: `resource` property, `toolResultContent` property, `init?(uri:)` lookup.
+Default implementations: `resource` property, `toolResultContent` property, `init?(uri:)` lookup. `toolResultContent` embeds a resource with empty text, the URI, and MIME type; it does not load the resource's content. Use the registered `ResourceModule` to serve content for that URI.
 
 ## ResourceModule
 
@@ -153,7 +157,7 @@ public protocol ResourceModule: Sendable {
 }
 ```
 
-Only `read(_:)` needs implementation.
+Only `read(_:)` needs implementation. The default `readContent(for:)` and `resolveResource(from:)` require a URI owned by the module and call `fatalError` for an unknown URI. For untrusted input, first use the failable descriptor `init?(uri:)` and then call `read(_:)`.
 
 ## MCPPromptDescriptor
 
@@ -180,7 +184,7 @@ public protocol PromptModule: Sendable {
 }
 ```
 
-Only `prompt(_:arguments:)` needs implementation. Prompt arguments arrive as plain strings, matching the MCP SDK's `GetPrompt.Parameters`. Build messages with `.user(.text(text:))` / `.assistant(.text(text:))`.
+Only `prompt(_:arguments:)` needs implementation. The default `getPrompt(name:arguments:)` and `resolvePrompt(from:)` require a name owned by the module and call `fatalError` for an unknown name. For untrusted input, first use the failable descriptor `init?(name:)`. Prompt arguments arrive as plain strings, matching the MCP SDK's `GetPrompt.Parameters`. Build messages with `.user(.text(text:))` / `.assistant(.text(text:))`.
 
 ## Error Handling
 
@@ -210,7 +214,7 @@ func withDetails(_ details: [String: String], message: String? = nil) -> Context
 
 ### ToolErrorConvertible
 
-Any error escaping a tool boundary must conform:
+Any error escaping a tool boundary must conform. The registrar converts it to JSON text containing `code`, `message`, and optional `details`, with `isError: true`. An error without this conformance reaches `fatalError`; translate errors from dependencies before they escape the handler.
 
 ```swift
 public protocol ToolErrorConvertible: Error {
@@ -229,4 +233,10 @@ public enum ToolArgumentError: Error {
 }
 ```
 
-Thrown automatically by `requireString`, `requireBool`, `decodeArguments`.
+Thrown automatically by `requireString`, `requireBool`, `decodeArguments`. It conforms to `ToolErrorConvertible` and produces code `tool.argument_invalid` with tool and argument context.
+
+## Registration Constraints
+
+Tool names, resource URIs, and prompt names must each be unique across all registered features and capabilities. Duplicate identifiers trigger a precondition failure during registration. Keep each module's declared identifiers consistent with its descriptor cases.
+
+Through the server registrars, an unknown tool returns `isError: true` with code `tool.unknown`; an unknown resource URI returns empty contents; an unknown prompt name returns no description and an empty message list. These routing results differ from calling the module's default lookup helpers directly.

@@ -29,7 +29,7 @@ extension {Name}ReadToolDescriptor: MCPToolDescriptor {
     var inputSchema: Value {
         switch self {
         case .read{Name}:
-            return .object([:])
+            return Schema.object([:])
         }
     }
 
@@ -75,6 +75,8 @@ protocol {Name}Reader: Sendable {
     func read{Name}() throws -> {ReturnType}
 }
 ```
+
+`{ReturnType}` must conform to `Encodable` for `encodePayload`. Errors thrown by the reader must conform to `ToolErrorConvertible`, or the handler must translate them before they escape.
 
 ## Wiring
 

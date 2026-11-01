@@ -1,4 +1,5 @@
 {
+  "version": "0.1.0",
   "name": "MCPServerKit",
   "description": "MCPServerKit Swift API reference and capability generator for building MCP servers. USE WHEN using MCPServerKit, LocalMCPServer, MCP server implementations, MCP tools, MCP resources, MCP prompts, reviewing existing MCP server code, OR adding new MCP tools, read capabilities, write capabilities, resource-backed capabilities to a Swift MCP server.",
   "author": { "name": "Nikolai Nobadi" }

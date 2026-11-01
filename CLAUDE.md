@@ -13,6 +13,8 @@ swift build
 swift test
 ```
 
+`.github/workflows/ci.yml` runs these commands for pull requests targeting `main`, using macOS 15 and Xcode 26.3.
+
 ## Architecture
 
 ```
@@ -45,6 +47,4 @@ The API reference skill for this package lives here, in `Skills/MCPServerKit/`, 
 
 The `nn-swift-skills` entry for this skill is pinned to a release tag (`ref`), not to a branch. **Skill changes reach users when a release is tagged, not when they merge.** A doc fix merged to `main` is invisible until the next tag.
 
-`.github/workflows/skill-ref-bump.yml` keeps the pin current: on every tag push it rewrites the entry's `ref` in `nikolainobadi/nn-swift-skills` and opens a PR there. If that workflow is ever removed, the bump becomes manual. Forgetting it fails silently — the marketplace keeps serving the previous release's docs forever, with nothing erroring and nothing warning.
-
-The workflow authenticates with the repo secret **`MARKETPLACE_TOKEN`**: a fine-grained PAT named `nn-swift-skills-ref-bump`, scoped to `nn-swift-skills` only (Contents and Pull requests, read and write), **expiring 2027-08-15**. It is shared with every other package repo publishing to that marketplace, so rotating it means re-setting the secret in each of them. When it expires, the workflow fails on tag push; treat that as "rotate the shared token", not "this repo's workflow is broken."
+The marketplace ref bump is manual: this repository has no tag-triggered workflow to update the entry in `nikolainobadi/nn-swift-skills`. Update that entry's `ref` to the release tag so the marketplace serves the matching docs.
