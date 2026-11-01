@@ -15,3 +15,4 @@ CIPipeKit/TestResults
 
 # Directories potentially created on remote AFP share
 config.json
+.nnex/pending/

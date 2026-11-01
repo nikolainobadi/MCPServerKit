@@ -1,0 +1,14 @@
+{
+  "targets" : [
+    {
+      "buildAndTestCommands" : [
+        "swift build",
+        "swift test"
+      ],
+      "name" : "MCPServerKit",
+      "path" : ".",
+      "skill" : "Skills/MCPServerKit",
+      "targetType" : "library"
+    }
+  ]
+}
