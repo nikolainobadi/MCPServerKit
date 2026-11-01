@@ -1,10 +1,3 @@
-//
-//  MCPResourceDescriptor.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/27/26.
-//
-
 import MCP
 
 /// A protocol representing enum-based MCP resource metadata.

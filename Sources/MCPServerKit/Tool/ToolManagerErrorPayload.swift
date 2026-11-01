@@ -1,10 +1,3 @@
-//
-//  ToolManagerErrorPayload.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 public struct ToolManagerErrorPayload: Codable {
     public let code: String
     public let message: String

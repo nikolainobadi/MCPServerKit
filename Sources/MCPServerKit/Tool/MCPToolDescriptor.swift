@@ -1,10 +1,3 @@
-//
-//  MCPToolDescriptor.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 import MCP
 
 /// A protocol representing enum-based MCP tool metadata.

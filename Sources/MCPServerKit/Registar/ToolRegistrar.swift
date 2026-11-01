@@ -1,10 +1,3 @@
-//
-//  ToolRegistrar.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 import MCP
 import Foundation
 

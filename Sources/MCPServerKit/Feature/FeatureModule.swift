@@ -1,10 +1,3 @@
-//
-//  FeatureModule.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 /// Groups related capabilities for a single domain.
 /// Provides flattened access to all tools, resources, and prompts for registration.
 public struct FeatureModule {

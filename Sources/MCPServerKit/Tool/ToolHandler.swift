@@ -1,10 +1,3 @@
-//
-//  ToolHandler.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/28/26.
-//
-
 import MCP
 
 /// A protocol representing pure domain execution for MCP tools.

@@ -1,10 +1,3 @@
-//
-//  ToolArgumentError.swift
-//  MCPServerKit
-//
-//  Created by Nikolai Nobadi on 1/25/26.
-//
-
 public enum ToolArgumentError: Error {
     case decodingError(Error)
     case missingOrInvalid(String)

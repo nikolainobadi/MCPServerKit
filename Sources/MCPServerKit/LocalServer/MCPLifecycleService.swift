@@ -1,10 +1,3 @@
-//
-//  MCPLifecycleService.swift
-//  Felix
-//
-//  Created by Nikolai Nobadi on 1/21/26.
-//
-
 import MCP
 import ServiceLifecycle
 
