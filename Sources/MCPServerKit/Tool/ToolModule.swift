@@ -20,7 +20,8 @@ public protocol ToolModule: Sendable {
     ///
     /// - Parameter params: The tool call parameters from the MCP client.
     /// - Returns: The result of the tool execution.
-    /// - Throws: A `ToolErrorConvertible` error if execution fails.
+    /// - Throws: A `ToolErrorConvertible` error if execution fails. Other errors reach the client
+    ///   with the generic code `internal.unhandled`.
     func handle(_ params: CallTool.Parameters) async throws -> CallTool.Result
 }
 
