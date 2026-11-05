@@ -145,7 +145,7 @@ protocol {Name}Provider: Sendable {
 }
 ```
 
-Errors thrown by the provider should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; otherwise the client gets the generic code `internal.unhandled`. Registering the resource module makes its content available at the descriptor URI; the text result above does not automatically include a resource reference.
+Errors thrown by the provider should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; other errors get the generic code `internal.unhandled`, except `CancellationError` and `MCPError`, which propagate to the SDK. Preserve those exceptions when translating dependency errors (see `ApiReference.md`). Registering the resource module makes its content available at the descriptor URI; the text result above does not automatically include a resource reference.
 
 ## Wiring
 

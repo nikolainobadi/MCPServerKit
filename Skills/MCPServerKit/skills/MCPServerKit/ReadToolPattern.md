@@ -76,7 +76,7 @@ protocol {Name}Reader: Sendable {
 }
 ```
 
-`{ReturnType}` must conform to `Encodable` for `encodePayload`. Errors thrown by the reader should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; otherwise the client gets the generic code `internal.unhandled`.
+`{ReturnType}` must conform to `Encodable` for `encodePayload`. Errors thrown by the reader should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; other errors get the generic code `internal.unhandled`, except `CancellationError` and `MCPError`, which propagate to the SDK. Preserve those exceptions when translating dependency errors (see `ApiReference.md`).
 
 ## Wiring
 

@@ -12,7 +12,7 @@ Swift framework for building MCP servers. Built on top of the [swift-sdk](https:
 ## Dependency
 
 ```swift
-.package(url: "https://github.com/nikolainobadi/MCPServerKit.git", from: "0.1.0")
+.package(url: "https://github.com/nikolainobadi/MCPServerKit.git", from: "0.1.1")
 ```
 
 **Requirements:** Swift 6.0+, macOS 15+
@@ -55,7 +55,7 @@ All descriptor enums must be `CaseIterable` and `Sendable`.
 - Use `Schema.object()` with `Schema.RequiredSchema` for tool inputSchema; use `Schema.object([:])` when there are no arguments
 - Use `ToolHandlerHelpers` methods for argument extraction (requireString, optionalString, etc.)
 - Keep tool names, resource URIs, and prompt names unique across all features; duplicates fail registration
-- Errors escaping tool boundaries should conform to `ToolErrorConvertible`; translate dependency errors before they escape, because anything else reaches the client with the generic code `internal.unhandled`
+- Errors escaping tool boundaries should conform to `ToolErrorConvertible`; translate dependency errors before they escape, so clients receive domain-specific codes instead of `internal.unhandled`. Let `CancellationError` and `MCPError` propagate to the SDK (see `ApiReference.md`)
 - `ToolError` protocol provides declarative, domain-prefixed error codes
 
 ## Context Files

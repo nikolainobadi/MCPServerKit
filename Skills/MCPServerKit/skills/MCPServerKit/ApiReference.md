@@ -11,6 +11,8 @@ public final class LocalMCPServer {
 
 `start()` serves over stdio and blocks until the process receives `SIGINT` or `SIGTERM`, then shuts down gracefully.
 
+For initial discovery, clients should request the tool, resource, and prompt lists after initialization; the server does not emit list-changed notifications on startup. Client `experimental` capabilities are removed from incoming `initialize` requests before SDK decoding, allowing object-valued experimental capabilities without a handshake decoding failure.
+
 ## FeatureModule
 
 ```swift
@@ -214,7 +216,7 @@ func withDetails(_ details: [String: String], message: String? = nil) -> Context
 
 ### ToolErrorConvertible
 
-Errors escaping a tool boundary should conform. The registrar converts them to JSON text containing `code`, `message`, and optional `details`, with `isError: true`. Translate errors from dependencies before they escape the handler: any other error is logged and returned the same way with the generic code `internal.unhandled`, and its description as the message. `CancellationError` and `MCPError` are rethrown to the SDK, so a cancelled request gets no response and an `MCPError` becomes a JSON-RPC error.
+Errors escaping a tool boundary should conform. The registrar converts them to JSON text containing `code`, `message`, and optional `details`, with `isError: true`. Translate errors from dependencies before they escape the handler: any other error is logged and returned the same way with the generic code `internal.unhandled`, and its description as the message. Preserve `CancellationError` and `MCPError` when translating dependency errors: they are rethrown to the SDK, so a cancelled request gets no response and an `MCPError` becomes a JSON-RPC error.
 
 ```swift
 public protocol ToolErrorConvertible: Error {

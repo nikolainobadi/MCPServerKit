@@ -94,7 +94,7 @@ struct {ArgumentsType}: Decodable, SchemaDerivable {
 
 Implement `schema()` explicitly; `SchemaDerivable` does not synthesize it. Replace the property and schema comments with the declared arguments. `{ReturnType}` must conform to `Encodable` for `encodePayload`.
 
-Errors thrown by the writer should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; otherwise the client gets the generic code `internal.unhandled`.
+Errors thrown by the writer should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; other errors get the generic code `internal.unhandled`, except `CancellationError` and `MCPError`, which propagate to the SDK. Preserve those exceptions when translating dependency errors (see `ApiReference.md`).
 
 ## Wiring
 
