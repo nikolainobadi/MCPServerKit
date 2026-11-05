@@ -214,7 +214,7 @@ func withDetails(_ details: [String: String], message: String? = nil) -> Context
 
 ### ToolErrorConvertible
 
-Any error escaping a tool boundary must conform. The registrar converts it to JSON text containing `code`, `message`, and optional `details`, with `isError: true`. An error without this conformance reaches `fatalError`; translate errors from dependencies before they escape the handler.
+Errors escaping a tool boundary should conform. The registrar converts them to JSON text containing `code`, `message`, and optional `details`, with `isError: true`. Translate errors from dependencies before they escape the handler: any other error is logged and returned the same way with the generic code `internal.unhandled`, and its description as the message. `CancellationError` and `MCPError` are rethrown to the SDK, so a cancelled request gets no response and an `MCPError` becomes a JSON-RPC error.
 
 ```swift
 public protocol ToolErrorConvertible: Error {

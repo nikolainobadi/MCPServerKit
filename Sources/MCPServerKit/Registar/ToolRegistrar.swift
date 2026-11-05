@@ -1,4 +1,5 @@
 import MCP
+import Logging
 import Foundation
 
 /// Central registrar responsible for MCP tool wiring.
@@ -11,9 +12,10 @@ enum ToolRegistrar {
     /// - Parameters:
     ///   - modules: The tool modules to register.
     ///   - server: The MCP server to register handlers on.
+    ///   - logger: Receives errors that tools did not convert into structured payloads.
     ///
     /// - Precondition: All tool names across modules must be unique.
-    static func register(modules: [any ToolModule], on server: Server) async {
+    static func register(modules: [any ToolModule], on server: Server, logger: Logger) async {
         let allTools = aggregateTools(from: modules)
         let router = buildRouter(from: modules)
 
@@ -26,20 +28,30 @@ enum ToolRegistrar {
                 return unknownToolError(toolName: params.name)
             }
 
-            do {
-                return try await module.handle(params)
-            } catch let error as ToolErrorConvertible {
-                return errorResult(from: error, toolName: params.name)
-            } catch {
-                // TODO: - maybe return an actual error result?
-                fatalError("Unhandled error escaped tool '\(params.name)': \(error)")
-            }
+            return try await call(module, with: params, logger: logger)
         }
     }
 }
 
 // MARK: - Internal (Testable)
 extension ToolRegistrar {
+    /// Runs a tool and maps what it throws to the response the client should receive.
+    ///
+    /// `CancellationError` and `MCPError` are rethrown because the SDK owns their protocol behavior:
+    /// a cancelled request gets no response, and an `MCPError` becomes a JSON-RPC error.
+    static func call(_ module: any ToolModule, with params: CallTool.Parameters, logger: Logger) async throws -> CallTool.Result {
+        do {
+            return try await module.handle(params)
+        } catch let error as ToolErrorConvertible {
+            return errorResult(from: error, toolName: params.name)
+        } catch let error where error is CancellationError || error is MCPError {
+            throw error
+        } catch {
+            logger.error("Unhandled error escaped tool '\(params.name)': \(error)")
+            return errorResult(from: UnhandledToolError(message: String(describing: error)), toolName: params.name)
+        }
+    }
+
     static func unknownToolError(toolName: String) -> CallTool.Result {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
@@ -65,6 +77,14 @@ extension ToolRegistrar {
 
 // MARK: - Private Methods
 private extension ToolRegistrar {
+    struct UnhandledToolError: ToolErrorConvertible {
+        let message: String
+
+        func toErrorPayload(toolName: String) -> ToolManagerErrorPayload {
+            return .init(code: "internal.unhandled", message: message, details: ["tool": toolName])
+        }
+    }
+
     static func aggregateTools(from modules: [any ToolModule]) -> [Tool] {
         return modules.flatMap({ $0.tools })
     }

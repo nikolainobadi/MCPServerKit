@@ -27,7 +27,8 @@ LocalMCPServer                  // wiring + stdio transport + ServiceLifecycle s
 ```
 
 - `ToolRegistrar` / `ResourceRegistrar` / `PromptRegistrar` (internal) register one list handler and one call/read/get handler each, routing by name or URI. Duplicate names/URIs are a `preconditionFailure`.
-- Errors escaping a tool must conform to `ToolErrorConvertible`; anything else is a `fatalError`. `ToolError` gives domain-prefixed snake_case codes.
+- Errors escaping a tool should conform to `ToolErrorConvertible`. `CancellationError` and `MCPError` are rethrown to the SDK; anything else is logged and returned as an `isError` result with code `internal.unhandled`. `ToolError` gives domain-prefixed snake_case codes.
+- `InitializeSanitizingTransport` (internal) wraps `StdioTransport` and removes client `experimental` capabilities from `initialize`, because swift-sdk 0.12.1 can't decode object values. Delete it once a swift-sdk release includes [PR #276](https://github.com/modelcontextprotocol/swift-sdk/pull/276).
 - `Exports.swift` re-exports `MCP`, so consumers only `import MCPServerKit`.
 
 ## Development Notes

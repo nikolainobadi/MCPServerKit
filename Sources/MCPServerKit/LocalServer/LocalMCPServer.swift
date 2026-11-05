@@ -52,9 +52,9 @@ public extension LocalMCPServer {
         }
         
         let logger = Logger(label: name)
-        let transport = StdioTransport(logger: logger)
+        let transport = InitializeSanitizingTransport(base: StdioTransport(logger: logger), logger: logger)
         
-        await ToolRegistrar.register(modules: features.flatMap(\.tools), on: server)
+        await ToolRegistrar.register(modules: features.flatMap(\.tools), on: server, logger: logger)
         await ResourceRegistrar.register(modules: features.flatMap(\.resources), on: server)
         await PromptRegistrar.register(modules: features.flatMap(\.prompts), on: server)
         

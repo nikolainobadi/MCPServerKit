@@ -76,7 +76,7 @@ protocol {Name}Reader: Sendable {
 }
 ```
 
-`{ReturnType}` must conform to `Encodable` for `encodePayload`. Errors thrown by the reader must conform to `ToolErrorConvertible`, or the handler must translate them before they escape.
+`{ReturnType}` must conform to `Encodable` for `encodePayload`. Errors thrown by the reader should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; otherwise the client gets the generic code `internal.unhandled`.
 
 ## Wiring
 

@@ -18,6 +18,7 @@ public protocol ToolHandler: ToolHandlerHelpers {
     ///   - descriptor: The resolved tool descriptor indicating which tool to execute.
     ///   - arguments: The raw arguments from the MCP client, if any.
     /// - Returns: The result of the tool execution.
-    /// - Throws: A `ToolErrorConvertible` error if execution fails.
+    /// - Throws: A `ToolErrorConvertible` error if execution fails. Other errors reach the client
+    ///   with the generic code `internal.unhandled`.
     func handle(_ descriptor: Descriptor, arguments: [String: Value]?) async throws -> CallTool.Result
 }
