@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "MCPServerKit",
   "description": "MCPServerKit Swift API reference for building MCP servers: LocalMCPServer, feature modules and capabilities, tool descriptors and handlers, schemas, tool errors, resources, and prompts. Server structure and scaffolding belong to nn-mcp-architecture.",
   "author": { "name": "Nikolai Nobadi" }
