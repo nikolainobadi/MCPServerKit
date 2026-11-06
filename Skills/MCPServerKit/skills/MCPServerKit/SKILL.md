@@ -1,13 +1,14 @@
 ---
 name: MCPServerKit
-description: MCPServerKit Swift API reference and capability generator for building MCP servers. USE WHEN using MCPServerKit, LocalMCPServer, MCP server implementations, MCP tools, MCP resources, MCP prompts, reviewing existing MCP server code, OR adding new MCP tools, read capabilities, write capabilities, resource-backed capabilities to a Swift MCP server.
+description: MCPServerKit Swift API reference for building MCP servers. USE WHEN using MCPServerKit, LocalMCPServer, FeatureModule, FeatureCapability, MCPToolDescriptor, ToolHandler, ToolHandlerHelpers, Schema, SchemaDerivable, ToolError, ToolErrorConvertible, MCPResourceDescriptor, ResourceModule, MCPPromptDescriptor, PromptModule, OR looking up a signature, schema, annotation, or error API while writing a Swift MCP server. Not for how a server is structured or for adding a server, feature, or capability: the nn-mcp-architecture skill owns those.
 user-invocable: true
-argument-hint: [feature-name, capability-type]
 ---
 
 # MCPServerKit
 
 Swift framework for building MCP servers. Built on top of the [swift-sdk](https://github.com/modelcontextprotocol/swift-sdk) MCP package.
+
+This skill is the API reference. How a server is laid out, where each type lives, and how servers, features, and capabilities are created belong to the **nn-mcp-architecture** skill, which generates them with `nnscaffold`. If that skill is not loaded and the request is to create or extend a server, install it with `claude plugin install nn-mcp-architecture@nn-swift-skills`, then continue there.
 
 ## Dependency
 
@@ -17,13 +18,7 @@ Swift framework for building MCP servers. Built on top of the [swift-sdk](https:
 
 **Requirements:** Swift 6.0+, macOS 15+
 
-`import MCPServerKit` re-exports the MCP SDK (`Value`, `Tool`, `CallTool`, `Resource`, `Prompt`, …) — no separate `import MCP` needed.
-
-## Workflow Routing
-
-| Workflow | Trigger | File |
-|----------|---------|------|
-| **AddCapability** | "add capability", "add tool", "add read tool", "add write tool", "add resource tool" | `Workflows/AddCapability.md` |
+`import MCPServerKit` re-exports the MCP SDK (`Value`, `Tool`, `CallTool`, `Resource`, `Prompt`, and so on), so no separate `import MCP` is needed.
 
 ## Architecture
 
@@ -31,21 +26,21 @@ Swift framework for building MCP servers. Built on top of the [swift-sdk](https:
 LocalMCPServer
   └── [FeatureModule]           // one per domain (e.g., Profile, Projects)
         └── [FeatureCapability]  // one per workflow
-              ├── ToolHandler    // required: domain logic via MCPToolDescriptor enum
+              ├── ToolHandler    // required: handles the tools of one MCPToolDescriptor enum
               ├── [ResourceModule]  // optional: static content via MCPResourceDescriptor enum
               └── [PromptModule]    // optional: prompt templates via MCPPromptDescriptor enum
 ```
 
 ## Composition Pattern
 
-Each layer uses enum-based descriptors for metadata and protocol conformers for logic:
+Each layer uses enum-based descriptors for metadata and protocol conformers for behavior:
 
-- **MCPToolDescriptor** enum → defines tool name, description, inputSchema, annotations
-- **ToolHandler** → receives resolved descriptor, executes domain logic
-- **MCPResourceDescriptor** enum → defines resource URI, name, description, mimeType
-- **ResourceModule** → reads content for a resolved resource
-- **MCPPromptDescriptor** enum → defines prompt name, description, arguments
-- **PromptModule** → returns prompt result for a resolved prompt
+- **MCPToolDescriptor** enum: defines tool name, description, inputSchema, annotations
+- **ToolHandler**: receives the resolved descriptor, decodes arguments, calls its dependency, and encodes the result
+- **MCPResourceDescriptor** enum: defines resource URI, name, description, mimeType
+- **ResourceModule**: reads content for a resolved resource
+- **MCPPromptDescriptor** enum: defines prompt name, description, arguments
+- **PromptModule**: returns prompt result for a resolved prompt
 
 All descriptor enums must be `CaseIterable` and `Sendable`.
 
@@ -62,12 +57,9 @@ All descriptor enums must be `CaseIterable` and `Sendable`.
 
 | File | Purpose | Load When |
 |------|---------|-----------|
-| `ApiReference.md` | Protocol signatures, Schema API, error handling | Implementing any MCP component |
-| `Examples.md` | Complete implementation examples | Learning patterns, copy-paste starting points |
-| `Reference.md` | Canonical constraints for adding capabilities | Using AddCapability workflow |
-| `ReadToolPattern.md` | ReadTool code template | Adding a ReadTool capability |
-| `WriteToolPattern.md` | WriteTool code template | Adding a WriteTool capability |
-| `ResourceToolPattern.md` | ResourceTool code template | Adding a ResourceTool capability |
+| `ApiReference.md` | Protocol signatures, Schema API, error handling | Writing any descriptor, handler, schema, module, or error |
+| `Examples.md` | Short examples of each API | Seeing how a protocol is conformed to |
+| `ResourceToolPattern.md` | Tool paired with a resource module | Writing a capability backed by an MCP resource |
 
 ## Quick Reference
 
@@ -76,12 +68,13 @@ All descriptor enums must be `CaseIterable` and `Sendable`.
 | Tools | `ToolHandler` | `MCPToolDescriptor` |
 | Resources | `ResourceModule` | `MCPResourceDescriptor` |
 | Prompts | `PromptModule` | `MCPPromptDescriptor` |
-| Errors | `ToolError` | — |
+| Errors | `ToolError` | none |
 | Schema | `Schema.object()` | `Schema.Field` |
 
 ## Examples
 
-- "How do I create an MCP tool?" → Load `Examples.md` for ToolHandler pattern
+- "How do I conform to ToolHandler?" → Load `Examples.md`
 - "Define tool input schema" → Load `ApiReference.md` for Schema API
 - "Handle errors from tools" → Load `ApiReference.md` for ToolError protocol
-- "Add a new capability to my MCP server" → Execute `Workflows/AddCapability.md`
+- "Add a tool that serves a resource" → Load `ResourceToolPattern.md`, after nn-mcp-architecture has settled where it goes
+- "Create a server" or "add a read tool" → nn-mcp-architecture
