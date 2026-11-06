@@ -145,10 +145,10 @@ protocol {Name}Provider: Sendable {
 }
 ```
 
-Errors thrown by the provider should conform to `ToolErrorConvertible`, or the handler should translate them before they escape; other errors get the generic code `internal.unhandled`, except `CancellationError` and `MCPError`, which propagate to the SDK. Preserve those exceptions when translating dependency errors (see `ApiReference.md`). Registering the resource module makes its content available at the descriptor URI; the text result above does not automatically include a resource reference.
+Errors thrown by the provider should conform to `ToolErrorConvertible`, so the provider's conformer translates dependency errors before they reach the handler; other errors get the generic code `internal.unhandled`, except `CancellationError` and `MCPError`, which propagate to the SDK. Preserve those exceptions when translating dependency errors (see `ApiReference.md`). Registering the resource module makes its content available at the descriptor URI; the text result above does not automatically include a resource reference.
 
 ## Wiring
 
 ```swift
-.init(handler: {Name}ToolHandler(provider: manager), resources: [{Name}ResourceModule()])
+.init(handler: {Name}ToolHandler(provider: backend), resources: [{Name}ResourceModule()])
 ```

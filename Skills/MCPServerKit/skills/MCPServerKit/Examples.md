@@ -37,7 +37,14 @@ extension GreetingToolDescriptor: MCPToolDescriptor {
         }
     }
 
-    var annotations: Tool.Annotations { .init() }
+    var annotations: Tool.Annotations {
+        switch self {
+        case .greet:
+            return .init(title: "Greet User", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false)
+        case .farewell:
+            return .init(title: "Farewell User", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false)
+        }
+    }
 }
 ```
 
